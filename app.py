@@ -57,7 +57,7 @@ if menu == "Analizador con IA":
                     if api_key:
                         with st.spinner("🤖 La IA está evaluando los datos..."):
                             import requests
-                            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+                            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={api_key}"
                             prompt = f"""
                             Eres un analista financiero experto en tecnología. 
                             Analiza estos datos de {name} ({ticker}):
