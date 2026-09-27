@@ -56,15 +56,13 @@ if menu == "Analizador con IA":
                     
                     if api_key:
                         with st.spinner("🤖 La IA está evaluando los datos..."):
-                            genai.configure(api_key=api_key)
-                            # Usamos gemini-pro que es más estable y universalmente disponible
-                            model = genai.GenerativeModel('gemini-pro')
+                            import requests
+                            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
                             prompt = f"""
                             Eres un analista financiero experto en tecnología. 
                             Analiza estos datos de {name} ({ticker}):
                             - Precio: {price}
                             - PER histórico: {per}
-                            - PER esperado: {fwd_per}
                             - Crecimiento de ingresos: {revenue_growth}
                             - Deuda vs Capital: {debt_eq}
                             - Márgenes de beneficio: {margins}
@@ -72,10 +70,20 @@ if menu == "Analizador con IA":
                             1. Dame una puntuación del 1 al 10 sobre si es buena inversión ahora mismo (ponla grande al principio).
                             2. Redacta un consejo de 3-4 párrafos explicando tus razones de manera sencilla para alguien que invierte y lee desde su móvil. Usa viñetas para lo bueno y lo malo.
                             """
-                            response = model.generate_content(prompt)
                             
-                            st.success("Análisis completado")
-                            st.markdown(response.text)
+                            data = {
+                                "contents": [{"parts":[{"text": prompt}]}]
+                            }
+                            
+                            response = requests.post(url, headers={'Content-Type': 'application/json'}, json=data)
+                            
+                            if response.status_code == 200:
+                                result = response.json()
+                                text = result.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', 'No se pudo generar el consejo.')
+                                st.success("Análisis completado")
+                                st.markdown(text)
+                            else:
+                                st.error(f"Error de la API de IA: {response.status_code} - {response.text}")
                     else:
                         st.warning("⚠️ Introduce tu clave API de Gemini en la barra lateral para generar el consejo experto con IA.")
             except Exception as e:
