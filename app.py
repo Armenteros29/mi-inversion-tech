@@ -36,7 +36,7 @@ if menu == "Analizador con IA":
                 stock = yf.Ticker(ticker)
                 info = stock.info
                 
-                if 'shortName' not in info:
+                if False:
                     st.error("No se ha encontrado la empresa. Revisa el Ticker.")
                 else:
                     name = info.get('shortName', ticker)
