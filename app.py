@@ -57,8 +57,8 @@ if menu == "Analizador con IA":
                     if api_key:
                         with st.spinner("🤖 La IA está evaluando los datos..."):
                             genai.configure(api_key=api_key)
-                            # Usamos gemini-1.5-flash que es rápido y excelente para texto
-                            model = genai.GenerativeModel('gemini-1.5-flash')
+                            # Usamos gemini-pro que es más estable y universalmente disponible
+                            model = genai.GenerativeModel('gemini-pro')
                             prompt = f"""
                             Eres un analista financiero experto en tecnología. 
                             Analiza estos datos de {name} ({ticker}):
